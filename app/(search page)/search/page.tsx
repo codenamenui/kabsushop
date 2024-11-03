@@ -28,7 +28,7 @@ type Merch = {
     }[];
     shops: {
         id: number;
-        name: string;
+        acronym: string;
     };
     merchandise_categories: {
         id: number;
@@ -278,7 +278,7 @@ const SearchPage = () => {
                                             ? `/ ${merch.variants[0].membership_price}`
                                             : ""}
                                         <br />
-                                        {merch.shops.name}
+                                        {merch.shops.acronym}
                                     </li>
                                 ))}
                             </ul>
