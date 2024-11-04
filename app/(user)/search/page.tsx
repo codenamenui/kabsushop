@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
+import Link from "next/link";
 
 type Shop = {
     id: number;
@@ -251,9 +252,13 @@ const SearchPage = () => {
                     <div>
                         <h1>Search Results for: {query}</h1>
                         {results.length > 0 ? (
-                            <ul className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">
                                 {results.map((merch) => (
-                                    <li key={merch.id} className="card w-3/12">
+                                    <Link
+                                        key={merch.id}
+                                        className="card w-3/12"
+                                        href={`/${merch.id}`}
+                                    >
                                         {merch.merchandise_pictures &&
                                         merch.merchandise_pictures.length >
                                             0 ? (
@@ -279,9 +284,9 @@ const SearchPage = () => {
                                             : ""}
                                         <br />
                                         {merch.shops.acronym}
-                                    </li>
+                                    </Link>
                                 ))}
-                            </ul>
+                            </div>
                         ) : (
                             <p>No products found.</p>
                         )}
