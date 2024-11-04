@@ -46,7 +46,7 @@ const Product = () => {
     const params = useParams();
     const merchId = params.slug;
     const supabase = createClientComponentClient();
-    const [merch, setMerch] = useState<Merch>(null);
+    const [merch, setMerch] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [quantity, setQuantity] = useState(1);
@@ -282,6 +282,7 @@ const Product = () => {
                                     value={selectedVariant}
                                     onChange={(event) => {
                                         setSelectedVariant(event.target.value);
+                                        setSelectedSize(null);
                                     }}
                                     required
                                 >
@@ -317,6 +318,26 @@ const Product = () => {
                                         </select>
                                     )}
                                 </select>
+                                {getVariant().sizes != null && (
+                                    <select
+                                        id="sizes"
+                                        value={selectedSize || ""}
+                                        onChange={(event) => {
+                                            setSelectedSize(event.target.value);
+                                        }}
+                                        required
+                                    >
+                                        <option value={null}></option>
+                                        {getVariant().sizes.map((size) => (
+                                            <option
+                                                key={size.id}
+                                                value={size.id}
+                                            >
+                                                {size.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                )}
                                 <label htmlFor="quantity">Quantity:</label>
                                 <input
                                     id="quantity"
@@ -330,9 +351,13 @@ const Product = () => {
                                     Add to Cart
                                 </button>
                                 <button
-                                    onClick={() =>
-                                        setOpenConfirmation(!openConfirmation)
-                                    }
+                                    onClick={() => {
+                                        if (selectedSize != null) {
+                                            setOpenConfirmation(
+                                                !openConfirmation
+                                            );
+                                        }
+                                    }}
                                 >
                                     Buy Now
                                 </button>
