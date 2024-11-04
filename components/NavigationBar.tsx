@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { signOut } from "./actions";
@@ -24,7 +24,9 @@ const NavigationBar = () => {
     const [shops, setShops] = useState<Shop[]>([]);
     const [user, setUser] = useState(null);
     const [query, setQuery] = useState("");
-
+    const path = usePathname();
+    const params = useParams();
+    const shopId = params.slug;
     const router = useRouter();
 
     useEffect(() => {
@@ -84,12 +86,13 @@ const NavigationBar = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (query.trim() !== "") {
-            const queryParams = new URLSearchParams(window.location.search);
-            queryParams.set("query", query);
+        const queryParams = new URLSearchParams(window.location.search);
+        queryParams.set("query", query);
+        if (path.includes("/shop")) {
+            router.push(`/shop/${shopId}?${queryParams.toString()}`);
+        } else {
             router.push(`/search?${queryParams.toString()}`);
         }
-        router.push(`/search?query=`);
     };
 
     return (

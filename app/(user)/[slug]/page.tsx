@@ -192,6 +192,8 @@ const Product = () => {
                     return;
                 }
             }
+
+            setOpenConfirmation(!openConfirmation);
         };
         insert();
     }
@@ -372,6 +374,7 @@ const Product = () => {
                                           quantity}
                                 </div>
                             </div>
+                            <div>{merch.receiving_information}</div>
                             <form action="">
                                 {merch.physical_payment && (
                                     <label className="block">
