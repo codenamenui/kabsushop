@@ -4,60 +4,86 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type Category = {
-    id: number;
-    name: string;
-    picture_url: string;
+  id: number;
+  name: string;
+  picture_url: string;
 };
 
 const CategoriesPage = () => {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const router = useRouter();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const router = useRouter();
 
-    useEffect(() => {
-        const getCategories = async () => {
-            const supabase = createClientComponentClient();
-            const { data, error } = await supabase.from("categories").select();
-            setCategories(data);
-        };
-        getCategories();
-    }, []);
-
-    const redirectCategory = (category: Category) => {
-        const queryParams = new URLSearchParams(window.location.search);
-        queryParams.set("category", category.name);
-        router.push(`/search?${queryParams.toString()}`);
+  useEffect(() => {
+    const getCategories = async () => {
+      const supabase = createClientComponentClient();
+      const { data, error } = await supabase.from("categories").select();
+      setCategories(data);
     };
+    getCategories();
+  }, []);
 
-    return (
-        <div>
-            <h1>Categories</h1>
-            <div>
-                {categories.map((category) => {
-                    return (
-                        <button
-                            key={category.id}
-                            onClick={() => {
-                                redirectCategory(category);
-                            }}
-                        >
-                            <h2>{category.name}</h2>
-                            <div>
-                                <Image
-                                    src={category.picture_url}
-                                    alt={category.name}
-                                    width={50}
-                                    height={50}
-                                    priority
-                                />
-                            </div>
-                        </button>
-                    );
-                })}
-            </div>
-        </div>
-    );
+  const redirectCategory = (category: Category) => {
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.set("category", category.name);
+    router.push(`/search?${queryParams.toString()}`);
+  };
+
+  return (
+    <section className="flex h-64 flex-col items-center justify-center gap-4 border-b border-zinc-200 bg-zinc-50">
+      <h1 className="text-2xl font-bold text-zinc-500">Categories</h1>
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-4/5"
+      >
+        <CarouselContent>
+          {categories.map((category) => {
+            return (
+              <CarouselItem
+                key={category.id}
+                className="md:basis-1/2 lg:basis-1/4"
+              >
+                <div className="p-1">
+                  <Card>
+                    <CardContent className="flex aspect-auto items-center justify-center p-6">
+                      <div
+                        role="button"
+                        onClick={() => redirectCategory(category)}
+                      >
+                        <div className="h-16 w-16">
+                          <Image
+                            src={category.picture_url}
+                            alt={category.name}
+                            width={40}
+                            height={40}
+                            priority
+                          />
+                        </div>
+                        <h2>{category.name}</h2>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </section>
+  );
 };
 
 export default CategoriesPage;
