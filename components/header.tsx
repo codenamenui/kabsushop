@@ -113,9 +113,11 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 flex h-16 items-center justify-between border-b border-zinc-200 bg-zinc-50 px-10 text-sm">
+    <header className="sticky top-0 flex h-16 items-center justify-between border-b border-zinc-200 bg-zinc-50 px-28">
       <div>
-        <GrStatusPlaceholder />
+        <Link href={"/"} className="font-bold text-emerald-800">
+          The Kabsu Shop
+        </Link>
       </div>
       <nav className="flex gap-4">
         <ul className="flex gap-2">
@@ -123,7 +125,7 @@ const Header = () => {
             <DropdownMenuTrigger className="flex items-center gap-1" asChild>
               <Button variant="ghost">
                 <p>Categories</p>
-                <ChevronDown size={16} />
+                <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -141,7 +143,7 @@ const Header = () => {
             <DropdownMenuTrigger className="flex items-center gap-1" asChild>
               <Button variant="ghost">
                 <p>Shops</p>
-                <ChevronDown size={16} />
+                <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -182,8 +184,20 @@ const Header = () => {
           </Button>
           {user ? (
             <div>
-              <Link href={"/profile"}>Go to profile</Link>
-              <button>Logout</button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost">
+                    <User />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link href={"/profile"}>Go to profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut}>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ) : (
             <Button variant="ghost" size="icon" onClick={logInGoogle}>

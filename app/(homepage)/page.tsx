@@ -21,9 +21,9 @@ export default function Home() {
   };
 
   return (
-    <section className="flex h-96 flex-col items-center justify-center border-b border-zinc-200 text-center">
+    <section className="flex h-96 flex-col items-center justify-center gap-2 border-b border-zinc-200 px-10 text-center">
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
-      <h1 className="text-6xl font-bold text-emerald-800">
+      <h1 className="w-11/12 text-6xl font-bold text-emerald-800">
         Your One-Stop Shop for Student Organization Merchandise
       </h1>
       <p className="text-lg">

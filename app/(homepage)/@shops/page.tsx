@@ -50,16 +50,20 @@ const Shops = () => {
                 <div className="p-1">
                   <Card>
                     <CardContent className="flex aspect-auto items-center justify-center p-6">
-                      <Link key={shop.id} href={`/shop/${shop.acronym}`}>
+                      <Link
+                        className="space-y-2"
+                        key={shop.id}
+                        href={`/shop/${shop.acronym}`}
+                      >
                         <Image
-                          width={50}
-                          height={50}
+                          width={64}
+                          height={64}
                           src={shop.logo_url}
                           alt={`${shop.acronym} logo`}
                           priority
                           className="rounded-full"
                         />
-                        <p>{shop.acronym}</p>
+                        <p className="text-center">{shop.acronym}</p>
                       </Link>
                     </CardContent>
                   </Card>

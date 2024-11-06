@@ -25,7 +25,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="flex h-40 items-center justify-center gap-48 bg-emerald-900 text-zinc-200">
+    <footer className="flex h-40 items-center justify-center gap-48 bg-emerald-900 text-sm text-zinc-200">
       <div className="flex flex-col">
         <Link href={"/"}>The Kabsu Shop</Link>
         <Link href={"/about"}>About us</Link>
