@@ -294,31 +294,15 @@ const Product = () => {
                                             {variant.name}
                                         </option>
                                     ))}
-                                    {selectedVariant.sizes && (
-                                        <select
-                                            id="size"
-                                            value={selectedSize}
-                                            onChange={(event) => {
-                                                setSelectedSize(
-                                                    event.target.value
-                                                );
-                                            }}
-                                            required
-                                        >
-                                            {selectedVariant.sizes.map(
-                                                (size) => {
-                                                    <option
-                                                        key={size.id}
-                                                        value={size.id}
-                                                    >
-                                                        {size.name}
-                                                    </option>;
-                                                }
-                                            )}
-                                        </select>
-                                    )}
                                 </select>
-                                {getVariant().sizes != null && (
+                                {/* <button
+                                    onClick={() => {
+                                        console.log(getVariant().sizes.length);
+                                    }}
+                                >
+                                    ssdsssssssssssssssssss
+                                </button> */}
+                                {getVariant().sizes.length && (
                                     <select
                                         id="sizes"
                                         value={selectedSize || ""}
@@ -352,7 +336,10 @@ const Product = () => {
                                 </button>
                                 <button
                                     onClick={() => {
-                                        if (selectedSize != null) {
+                                        if (
+                                            selectedSize != null ||
+                                            !getVariant().sizes.length
+                                        ) {
                                             setOpenConfirmation(
                                                 !openConfirmation
                                             );
