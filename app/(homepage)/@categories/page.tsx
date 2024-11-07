@@ -40,7 +40,7 @@ const CategoriesPage = () => {
 
   return (
     <section className="flex h-64 flex-col items-center justify-center gap-4 border-b border-zinc-200 bg-zinc-50">
-      <h1 className="text-2xl font-bold text-zinc-500">Categories</h1>
+      <h1 className="text-2xl font-bold text-emerald-800">Categories</h1>
       <Carousel
         opts={{
           align: "start",
@@ -70,7 +70,9 @@ const CategoriesPage = () => {
                             priority
                           />
                         </div>
-                        <h2>{category.name}</h2>
+                        <h2 className="text-center font-semibold">
+                          {category.name}
+                        </h2>
                       </div>
                     </CardContent>
                   </Card>

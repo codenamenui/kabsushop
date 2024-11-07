@@ -36,7 +36,7 @@ const Shops = () => {
 
   return (
     <section className="flex h-64 flex-col items-center justify-center gap-4 border-b border-zinc-200 bg-zinc-50">
-      <h1 className="text-2xl font-bold text-zinc-500">Shops</h1>
+      <h1 className="text-2xl font-bold text-emerald-800">Shops</h1>
       <Carousel
         opts={{
           align: "start",
@@ -63,7 +63,9 @@ const Shops = () => {
                           priority
                           className="rounded-full"
                         />
-                        <p className="text-center">{shop.acronym}</p>
+                        <p className="text-center font-semibold">
+                          {shop.acronym}
+                        </p>
                       </Link>
                     </CardContent>
                   </Card>

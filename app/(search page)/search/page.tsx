@@ -5,17 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
-import { profileEnd } from "console";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -211,7 +202,7 @@ const SearchPage = () => {
 
   return (
     <div className="flex px-28 text-sm">
-      <aside className="border-r-2 border-zinc-200 pr-32 pt-4">
+      <aside className="border-r border-zinc-200 pr-32 pt-4">
         <div className="flex flex-col gap-3">
           <h4 className="text-base font-semibold">Filters</h4>
           <div>
