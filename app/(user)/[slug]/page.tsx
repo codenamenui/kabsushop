@@ -156,6 +156,7 @@ const Product = () => {
                         online_payment: paymentOption == "online",
                         physical_payment: paymentOption == "irl",
                         variant_id: selectedVariant,
+                        merch_id: merch.id,
                         shop_id: merch.shops.id,
                         size_id: selectedSize,
                         status_id: status_id,
@@ -199,7 +200,6 @@ const Product = () => {
     }
 
     function handleCartUpload() {
-        console.log("Ds");
         const cartUpload = async () => {
             const supabase = createClientComponentClient();
             const {
@@ -219,6 +219,7 @@ const Product = () => {
                         user_id: user.id,
                         quantity: quantity,
                         variant_id: selectedVariant,
+                        merch_id: merch.id,
                         shop_id: merch.shops.id,
                         size_id: selectedSize,
                     },
@@ -295,13 +296,6 @@ const Product = () => {
                                         </option>
                                     ))}
                                 </select>
-                                {/* <button
-                                    onClick={() => {
-                                        console.log(getVariant().sizes.length);
-                                    }}
-                                >
-                                    ssdsssssssssssssssssss
-                                </button> */}
                                 {getVariant().sizes.length && (
                                     <select
                                         id="sizes"
@@ -311,7 +305,6 @@ const Product = () => {
                                         }}
                                         required
                                     >
-                                        <option value={null}></option>
                                         {getVariant().sizes.map((size) => (
                                             <option
                                                 key={size.id}
