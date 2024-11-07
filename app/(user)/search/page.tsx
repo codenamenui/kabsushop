@@ -24,6 +24,10 @@ type Merch = {
         picture_url: string;
     }[];
     variants: {
+        sizes: {
+            original_price: number;
+            membership_price: number;
+        }[];
         original_price: number;
         membership_price: number;
     }[];
@@ -85,8 +89,8 @@ const SearchPage = () => {
             name, 
             created_at,
             merchandise_pictures(picture_url), 
-            variants(original_price, membership_price), 
-            shops!inner(id, name),
+            variants(original_price, membership_price, sizes(original_price, membership_price)), 
+            shops!inner(id, name, acronym),
             merchandise_categories(id, cat_id)
         `);
 
@@ -275,13 +279,10 @@ const SearchPage = () => {
                                         ) : (
                                             <p>No image available</p>
                                         )}
-                                        {merch.name} - $
-                                        {merch.variants[0].original_price}{" "}
-                                        {merch.variants[0].membership_price <
-                                            merch.variants[0].original_price &&
-                                        merch.variants[0].membership_price
-                                            ? `/ ${merch.variants[0].membership_price}`
-                                            : ""}
+                                        {merch.name} -
+                                        {merch.variants[0].sizes.length > 0
+                                            ? `$${merch.variants[0].sizes[0].original_price} / $${merch.variants[0].sizes[0].membership_price}`
+                                            : `$${merch.variants[0].original_price} / $${merch.variants[0].membership_price}`}
                                         <br />
                                         {merch.shops.acronym}
                                     </Link>
