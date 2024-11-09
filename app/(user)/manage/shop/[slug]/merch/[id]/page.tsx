@@ -1,8 +1,9 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 type Variant = {
     picture_url: File;
@@ -21,11 +22,33 @@ const Merch = () => {
     const { id, slug: shopId } = useParams();
     const [name, setName] = useState<string>("");
     const [desc, setDesc] = useState<string>("");
-    const [variants, setVariants] = useState<Variant[]>([]);
+    const [variants, setVariants] = useState<Variant[]>([
+        {
+            name: "",
+            picture_url: null,
+            original_price: 1,
+            membership_price: 1,
+            merch_id: null,
+        },
+    ]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [merchPics, setMerchPics] = useState<File[]>([]);
     const [categories, setCategories] = useState([]);
     const [discount, setDiscount] = useState(false);
+    const router = useRouter();
+    const [cancel, setCancel] = useState(false);
+    const [physical, setPhysical] = useState(false);
+    const [online, setOnline] = useState(false);
+    const [rece, setRece] = useState("");
+
+    useEffect(() => {
+        const getOptions = async () => {
+            const supabase = createClientComponentClient();
+            const { data, error } = await supabase.from("categories").select();
+            setCategories(data);
+        };
+        getOptions();
+    }, []);
 
     const handleAddCategory = (e) => {
         const newCategoryId = e.target.value;
@@ -65,11 +88,122 @@ const Merch = () => {
         setMerchPics((prev) => prev.filter((_, i) => i !== index));
     };
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault(); // Prevent default form submission behavior
+        const supabase = createClientComponentClient();
+        try {
+            // Insert merchandise into database
+            const { data: merch, error: insertError } = await supabase
+                .from("merchandises")
+                .insert([
+                    {
+                        name: name,
+                        description: desc,
+                        shop_id: shopId,
+                        online_payment: online ? online : false,
+                        physical_payment: physical ? physical : false,
+                        cancellable: cancel ? cancel : false,
+                        receiving_information: rece,
+                    },
+                ])
+                .select()
+                .single();
+
+            if (insertError) {
+                throw insertError;
+            }
+            // Upload merchandise pictures
+            for (let i = 0; i < merchPics.length; i++) {
+                const merch_url = `merch_${name}_${i + 1}_${Date.now()}.png`;
+                const { error: storageError } = await supabase.storage
+                    .from("merch-picture")
+                    .upload(merch_url, merchPics[i]);
+
+                if (storageError) {
+                    throw storageError;
+                }
+
+                const {
+                    data: { publicUrl: merchUrl },
+                } = supabase.storage
+                    .from("merch-picture")
+                    .getPublicUrl(merch_url);
+
+                const { error: merch_error } = await supabase
+                    .from("merchandise_pictures")
+                    .insert([{ picture_url: merchUrl, merch_id: merch.id }]);
+
+                if (merch_error) {
+                    throw merch_error;
+                }
+            }
+            // Upload variants
+            for (let i = 0; i < variants.length; i++) {
+                const variant_url = `variant_${name}_${
+                    i + 1
+                }_${Date.now()}.png`;
+                console.log(variants[i].picture_url);
+                if (variants[i].picture_url) {
+                    const { error: storageError } = await supabase.storage
+                        .from("variant-picture")
+                        .upload(variant_url, variants[i].picture_url);
+
+                    if (storageError) {
+                        throw storageError;
+                    }
+
+                    const {
+                        data: { publicUrl: variantUrl },
+                    } = supabase.storage
+                        .from("variant-picture")
+                        .getPublicUrl(variant_url);
+
+                    const { data, error: merch_error } = await supabase
+                        .from("variants")
+                        .insert([
+                            {
+                                picture_url: variantUrl,
+                                name: variants[i].name,
+                                original_price: variants[i].original_price,
+                                membership_price: discount
+                                    ? variants[i].membership_price
+                                    : variants[i].original_price,
+                                merch_id: merch.id,
+                            },
+                        ])
+                        .select();
+                    console.log(data);
+                    if (merch_error) {
+                        throw merch_error;
+                    }
+                }
+            }
+            for (let i = 0; i < selectedCategories.length; i++) {
+                const { error: cat_error } = await supabase
+                    .from("merchandise_categories")
+                    .insert([
+                        {
+                            cat_id: selectedCategories[i],
+                            merch_id: merch.id,
+                        },
+                    ]);
+
+                if (cat_error) {
+                    throw cat_error;
+                }
+            }
+            console.log("Successful!");
+            router.push(`/manage/shop/${shopId}/merch/${id}`);
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
     return (
         <div>
             <div className="text-red-700">
                 <h1>Add Merchandise</h1>
-                <form action="" className="flex flex-col gap-4">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <label>
                         Name:
                         <input
@@ -86,6 +220,16 @@ const Merch = () => {
                         <textarea
                             value={desc}
                             onChange={(e) => setDesc(e.target.value)}
+                            required
+                            className="textarea"
+                        />
+                    </label>
+
+                    <label>
+                        Receving Information:
+                        <textarea
+                            value={rece}
+                            onChange={(e) => setRece(e.target.value)}
                             required
                             className="textarea"
                         />
@@ -120,7 +264,6 @@ const Merch = () => {
                             name="categories"
                             onChange={handleAddCategory}
                             className="dropdown"
-                            required
                         >
                             <option value="">Select a category</option>
                             {categories.map((category) => {
@@ -288,7 +431,7 @@ const Merch = () => {
                                                     i == index
                                                         ? {
                                                               ...v,
-                                                              variantPicture:
+                                                              picture_url:
                                                                   e.target
                                                                       .files?.[0] ||
                                                                   null,
@@ -332,6 +475,39 @@ const Merch = () => {
                     >
                         Add Variant
                     </button>
+
+                    <label>
+                        Cancellable:
+                        <input
+                            type="checkbox"
+                            checked={cancel}
+                            onChange={() => {
+                                setCancel(!cancel);
+                            }}
+                        />
+                    </label>
+
+                    <label>
+                        Allow In Person Payment:
+                        <input
+                            type="checkbox"
+                            checked={physical}
+                            onChange={() => {
+                                setPhysical(!physical);
+                            }}
+                        />
+                    </label>
+
+                    <label>
+                        Allow Online Payment:
+                        <input
+                            type="checkbox"
+                            checked={online}
+                            onChange={() => {
+                                setOnline(!online);
+                            }}
+                        />
+                    </label>
 
                     <button type="submit" className="button mt-4">
                         Submit

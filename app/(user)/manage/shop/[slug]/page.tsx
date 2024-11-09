@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { deleteMerch } from "./actions";
 
 interface PostProps {
     params: {
@@ -66,8 +67,6 @@ const ShopManagement = async ({ params }: PostProps) => {
         )
         .eq("shop_id", shop.id);
 
-    function deleteMerch() {}
-
     return (
         <div>
             <div className="flex flex-col">
@@ -119,7 +118,11 @@ const ShopManagement = async ({ params }: PostProps) => {
                                 >
                                     Edit
                                 </Link>
-                                <button type="button">Delete</button>
+                                <form action={deleteMerch}>
+                                    <button name="id" value={merch.id}>
+                                        Delete
+                                    </button>
+                                </form>
                             </div>
                         );
                     })}

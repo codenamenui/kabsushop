@@ -280,7 +280,8 @@ const SearchPage = () => {
                                             <p>No image available</p>
                                         )}
                                         {merch.name} -
-                                        {merch.variants[0].sizes.length > 0
+                                        {merch.variants[0].sizes &&
+                                        merch.variants[0].sizes.length > 0
                                             ? `$${merch.variants[0].sizes[0].original_price} / $${merch.variants[0].sizes[0].membership_price}`
                                             : `$${merch.variants[0].original_price} / $${merch.variants[0].membership_price}`}
                                         <br />
