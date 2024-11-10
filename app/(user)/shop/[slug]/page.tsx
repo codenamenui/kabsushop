@@ -253,12 +253,12 @@ const SearchPage = () => {
               <Card className="flex w-full items-center gap-3 p-3">
                 <Image
                   src={shop.logo_url}
-                  width={100}
-                  height={100}
+                  width={80}
+                  height={80}
                   alt={""}
                   className="rounded-full"
                 />
-                <div>
+                <div className="text-xs">
                   <p className="text-lg font-semibold">{shop.name}</p>
                   {/* <p className="text-zinc-600">{shop.acronym}</p> */}
                   <p>{shop.colleges.name}</p>

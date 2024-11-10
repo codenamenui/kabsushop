@@ -34,7 +34,6 @@ const ProfileInputComponent = ({
         // required
         className="form-input"
       />
-      <br />
     </div>
   );
 };

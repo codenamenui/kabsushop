@@ -46,7 +46,7 @@ const ManagedShops = () => {
         managedShops.map((s) => {
           const shop = s.shops;
           return (
-            <Card key={shop.id} className="flex items-center gap-1 p-3">
+            <Card key={shop.id} className="flex items-center gap-4 p-3">
               <Image
                 src={shop.logo_url}
                 width={72}

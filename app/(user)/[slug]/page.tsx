@@ -336,7 +336,7 @@ const Product = () => {
               >
                 <div className="flex gap-2">
                   <div>
-                    <Label htmlFor="picture">Variant</Label>
+                    <Label htmlFor="variant">Variant</Label>
                     <Select
                       value={`${selectedVariant}`}
                       onValueChange={(val) => {

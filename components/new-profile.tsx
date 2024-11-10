@@ -201,7 +201,7 @@ const NewProfile = () => {
   };
 
   return (
-    <div className="">
+    <div className="space-y-3">
       <ProfileInputComponent
         label="Student Number"
         type="text"
