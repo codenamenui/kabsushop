@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Image from "next/image";
-<<<<<<< HEAD:app/(search page)/search/page.tsx
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
@@ -15,9 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-=======
-import Link from "next/link";
->>>>>>> 04b78bb51d5c4e053732b41fb1d73ca5b983e273:app/(user)/search/page.tsx
 
 type Shop = {
   id: number;
@@ -99,7 +95,7 @@ const SearchPage = () => {
             created_at,
             merchandise_pictures(picture_url), 
             variants(original_price, membership_price), 
-            shops!inner(id, name),
+            shops!inner(id, name, acronym),
             merchandise_categories(id, cat_id)
         `);
 
@@ -133,7 +129,6 @@ const SearchPage = () => {
     }
 
     if (sort === "date") {
-      console.log(filteredResults);
       filteredResults.sort((a, b) => {
         return (
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -152,7 +147,6 @@ const SearchPage = () => {
         return priceB - priceA; // Ascending order
       });
     }
-    console.log(sort);
     if (error) {
       console.error(error);
     } else {
@@ -162,6 +156,7 @@ const SearchPage = () => {
 
   // Fetch data when query, selectedCategories, or selectedShops change
   useEffect(() => {
+    console.log(categoryParam);
     if (categoryParam) {
       const categoryIds = categoryParam.split(",").map(Number);
       setSelectedCategories(categoryIds); // Set selected categories from URL param
@@ -204,7 +199,6 @@ const SearchPage = () => {
     router.push(`/search?${queryParams.toString()}`); // Update the URL without reloading
   };
 
-<<<<<<< HEAD:app/(search page)/search/page.tsx
   return (
     <div className="flex px-28 text-sm">
       <aside className="border-r border-zinc-200 pr-32 pt-4">
@@ -213,7 +207,7 @@ const SearchPage = () => {
           <div>
             <p className="pb-2 font-semibold">Categories</p>
             <div className="flex flex-col gap-2 text-sm">
-              {categories.map((category) => (
+              {categories?.map((category) => (
                 <div key={category.id} className="flex items-center gap-2">
                   <Checkbox
                     id={`category-${category.id}`}
@@ -226,107 +220,6 @@ const SearchPage = () => {
                   >
                     {category.name}
                   </label>
-=======
-    return (
-        <div>
-            <div className="flex">
-                <div className="flex-col border-r-2 border-gray-400 h-screen p-1">
-                    <div>
-                        <p>Categories</p>
-                        {categories.map((category) => (
-                            <div
-                                key={category.id}
-                                className="flex items-center gap-2"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id={`category-${category.id}`}
-                                    onChange={() =>
-                                        handleCategoryChange(category.id)
-                                    }
-                                    checked={selectedCategories.includes(
-                                        category.id
-                                    )}
-                                />
-                                <label htmlFor={`category-${category.id}`}>
-                                    {category.name}
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                    <div>
-                        <p>Shops</p>
-                        {shops.map((shop) => (
-                            <div
-                                key={shop.id}
-                                className="flex items-center gap-2"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id={`shop-${shop.id}`}
-                                    onChange={() => handleShopChange(shop.id)}
-                                    checked={selectedShops.includes(shop.id)}
-                                />
-                                <label htmlFor={`shop-${shop.id}`}>
-                                    {shop.acronym}
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="flex flex-col">
-                    <div className="flex gap-5">
-                        <button onClick={() => setSort("date")}>New</button>
-                        <button onClick={() => setSort("ascending")}>
-                            Price Ascending
-                        </button>
-                        <button onClick={() => setSort("descending")}>
-                            Price Descending
-                        </button>
-                    </div>
-                    <div>
-                        <h1>Search Results for: {query}</h1>
-                        {results.length > 0 ? (
-                            <div className="flex flex-col gap-2">
-                                {results.map((merch) => (
-                                    <Link
-                                        key={merch.id}
-                                        className="card w-3/12"
-                                        href={`/${merch.id}`}
-                                    >
-                                        {merch.merchandise_pictures &&
-                                        merch.merchandise_pictures.length >
-                                            0 ? (
-                                            <Image
-                                                alt={"loading"}
-                                                width={50}
-                                                height={50}
-                                                src={
-                                                    merch
-                                                        .merchandise_pictures[0]
-                                                        .picture_url
-                                                }
-                                            />
-                                        ) : (
-                                            <p>No image available</p>
-                                        )}
-                                        {merch.name} - $
-                                        {merch.variants[0].original_price}{" "}
-                                        {merch.variants[0].membership_price <
-                                            merch.variants[0].original_price &&
-                                        merch.variants[0].membership_price
-                                            ? `/ ${merch.variants[0].membership_price}`
-                                            : ""}
-                                        <br />
-                                        {merch.shops.acronym}
-                                    </Link>
-                                ))}
-                            </div>
-                        ) : (
-                            <p>No products found.</p>
-                        )}
-                    </div>
->>>>>>> 04b78bb51d5c4e053732b41fb1d73ca5b983e273:app/(user)/search/page.tsx
                 </div>
               ))}
             </div>
@@ -334,7 +227,7 @@ const SearchPage = () => {
           <div>
             <p className="pb-2 font-semibold">Shops</p>
             <div className="flex flex-col gap-2 text-sm">
-              {shops.map((shop) => (
+              {shops?.map((shop) => (
                 <div key={shop.id} className="flex items-center gap-2">
                   <Checkbox
                     id={`shop-${shop.id}`}
@@ -377,7 +270,7 @@ const SearchPage = () => {
           {results.length > 0 ? (
             <div className="grid grid-cols-4 gap-4">
               {results.map((merch) => (
-                <Link href={`/merch/${merch.id}`} key={merch.id}>
+                <Link href={`/${merch.id}`} key={merch.id}>
                   <Card className="h-full w-52">
                     <CardContent className="p-5">
                       {merch.merchandise_pictures &&
@@ -395,8 +288,8 @@ const SearchPage = () => {
                     </CardContent>
                     <CardFooter>
                       <div>
-                        <p>{merch.shops.acronym}</p> {/* undefined */}
                         <p className="font-bold">{merch.name}</p>
+                        <p>{merch.shops.acronym}</p>
                         <p className="text-base font-semibold text-emerald-800">
                           ${merch.variants[0].original_price}{" "}
                         </p>

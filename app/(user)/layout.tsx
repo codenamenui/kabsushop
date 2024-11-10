@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
-<<<<<<< HEAD:app/(search page)/layout.tsx
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-=======
-import NavigationBar from "@/components/NavigationBar";
-import Footer from "@/components/Footer";
->>>>>>> 04b78bb51d5c4e053732b41fb1d73ca5b983e273:app/(user)/layout.tsx
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +14,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-<<<<<<< HEAD:app/(search page)/layout.tsx
   return (
     <html lang="en">
       <body>
@@ -26,19 +21,9 @@ export default function RootLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          <Toaster />
         </div>
       </body>
     </html>
   );
-=======
-    return (
-        <html lang="en">
-            <body>
-                <NavigationBar />
-                {children}
-                <Footer />
-            </body>
-        </html>
-    );
->>>>>>> 04b78bb51d5c4e053732b41fb1d73ca5b983e273:app/(user)/layout.tsx
 }

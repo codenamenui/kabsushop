@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import { signOut } from "./actions";
 import placeholder from "@/assets/placeholder.webp";
 import { Bell, ShoppingCart, User } from "lucide-react";
-import { GrStatusPlaceholder } from "react-icons/gr";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -81,6 +80,7 @@ const Header = () => {
     if (!error) {
       setUser(null);
     }
+    router.push("/");
   };
 
   const logInGoogle = async (e: React.FormEvent) => {
@@ -101,14 +101,13 @@ const Header = () => {
     if (query.trim() !== "") {
       const queryParams = new URLSearchParams(window.location.search);
       queryParams.set("query", query);
-      console.log(queryParams.toString());
       router.push(`/search?${queryParams.toString()}`);
     }
   };
 
   const redirectCategory = (category: Category) => {
     const queryParams = new URLSearchParams(window.location.search);
-    queryParams.set("category", category.name);
+    queryParams.set("category", category.id.toString());
     router.push(`/search?${queryParams.toString()}`);
   };
 
@@ -129,7 +128,7 @@ const Header = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              {categories.map((category) => (
+              {categories?.map((category) => (
                 <DropdownMenuItem
                   onClick={() => redirectCategory(category)}
                   key={category.id}
@@ -149,7 +148,7 @@ const Header = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel>Organizations</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {shops.map((shop) => (
+              {shops?.map((shop) => (
                 <DropdownMenuItem key={shop.id}>
                   {shop.acronym}
                 </DropdownMenuItem>
@@ -176,29 +175,33 @@ const Header = () => {
           />
         </form>
         <div className="flex">
-          <Button variant="ghost" size="icon">
-            <Bell />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <ShoppingCart />
-          </Button>
+          <Link href={"/notification"}>
+            <Button variant="ghost" size="icon">
+              <Bell />
+            </Button>
+          </Link>
+          <Link href={"/cart"}>
+            <Button variant="ghost" size="icon">
+              <ShoppingCart />
+            </Button>
+          </Link>
           {user ? (
-            <div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost">
-                    <User />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Link href={"/profile"}>Go to profile</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={signOut}>Logout</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost">
+                  <User />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link href={"/user"}>Go to profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <Button variant="ghost" size="icon" onClick={logInGoogle}>
               <User />

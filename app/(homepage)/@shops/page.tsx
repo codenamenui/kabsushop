@@ -5,6 +5,14 @@ import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import placeholder from "@/assets/placeholder.webp";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type Shop = {
   id: number;
@@ -27,8 +35,8 @@ const Shops = () => {
   }, []);
 
   return (
-    <section className="flex h-64 flex-col items-center justify-center gap-4 border-b border-zinc-200 bg-zinc-50">
-      <h1 className="text-2xl font-bold text-emerald-800">Shops</h1>
+    <section className="flex h-64 flex-col items-center justify-center gap-6 border-b border-zinc-200 bg-zinc-50">
+      <h1 className="text-3xl font-bold text-emerald-800">Shops</h1>
       <Carousel
         opts={{
           align: "start",
@@ -36,7 +44,7 @@ const Shops = () => {
         className="w-4/5"
       >
         <CarouselContent>
-          {shops.map((shop) => {
+          {shops?.map((shop) => {
             return (
               <CarouselItem key={shop.id} className="md:basis-1/2 lg:basis-1/4">
                 <div className="p-1">
@@ -45,7 +53,7 @@ const Shops = () => {
                       <Link
                         className="space-y-2"
                         key={shop.id}
-                        href={`/shop/${shop.acronym}`}
+                        href={`/shop/${shop.id}`}
                       >
                         <Image
                           width={64}

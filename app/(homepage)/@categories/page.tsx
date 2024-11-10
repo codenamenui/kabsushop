@@ -39,8 +39,8 @@ const CategoriesPage = () => {
   };
 
   return (
-    <section className="flex h-64 flex-col items-center justify-center gap-4 border-b border-zinc-200 bg-zinc-50">
-      <h1 className="text-2xl font-bold text-emerald-800">Categories</h1>
+    <section className="flex h-64 flex-col items-center justify-center gap-6 border-b border-zinc-200 bg-zinc-50">
+      <h1 className="text-3xl font-bold text-emerald-800">Categories</h1>
       <Carousel
         opts={{
           align: "start",
@@ -48,7 +48,7 @@ const CategoriesPage = () => {
         className="w-4/5"
       >
         <CarouselContent>
-          {categories.map((category) => {
+          {categories?.map((category) => {
             return (
               <CarouselItem
                 key={category.id}
