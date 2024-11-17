@@ -399,7 +399,12 @@ const Cart = () => {
                             )}
                           </div>
                         )}
-                        <Button
+                      </form>
+                      
+                    </div>
+                  );
+                })}
+                <Button
                           onClick={() =>
                             selectedOrders.map((order) => {
                               handleOrderSubmit(
@@ -416,10 +421,6 @@ const Cart = () => {
                         >
                           Submit
                         </Button>
-                      </form>
-                    </div>
-                  );
-                })}
             </div>
           </DialogContent>
         </Dialog>

@@ -94,7 +94,7 @@ const SearchPage = () => {
             name, 
             created_at,
             merchandise_pictures(picture_url), 
-            variants(original_price, membership_price), 
+            variants(original_price, membership_price, sizes(original_price, membership_price)), 
             shops!inner(id, name, acronym),
             merchandise_categories(id, cat_id)
         `);
@@ -156,18 +156,19 @@ const SearchPage = () => {
 
   // Fetch data when query, selectedCategories, or selectedShops change
   useEffect(() => {
-    console.log(categoryParam);
+    let categoryIds;
+    let shopIds;
     if (categoryParam) {
-      const categoryIds = categoryParam.split(",").map(Number);
+      categoryIds = categoryParam.split(",").map(Number);
       setSelectedCategories(categoryIds); // Set selected categories from URL param
     }
 
     if (shopParam) {
-      const shopIds = shopParam.split(",").map(Number);
+      shopIds = shopParam.split(",").map(Number);
       setSelectedShops(shopIds); // Set selected shops from URL param
     }
 
-    fetchMerchandises(query, selectedCategories, selectedShops);
+    fetchMerchandises(query, categoryParam ? categoryIds : selectedCategories, shopParam ? shopIds : selectedShops);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, categoryParam, shopParam, sort]); // Listen for changes in query, categoryParam, and shopParam
 
@@ -291,12 +292,12 @@ const SearchPage = () => {
                         <p className="font-bold">{merch.name}</p>
                         <p>{merch.shops.acronym}</p>
                         <p className="text-base font-semibold text-emerald-800">
-                          ${merch.variants[0].original_price}{" "}
+                          ${merch.variants[0].original_price || merch.variants[0].sizes[0].original_price}
                         </p>
                         <p>
                           Member:{" "}
                           <span className="font-semibold text-emerald-800">
-                            ${merch.variants[0].membership_price}
+                            ${merch.variants[0].membership_price || merch.variants[0].sizes[0].membership_price}
                           </span>
                         </p>
                       </div>

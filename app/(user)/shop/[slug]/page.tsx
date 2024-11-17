@@ -110,7 +110,6 @@ const SearchPage = () => {
   const fetchMerchandises = async (
     query: string | null,
     categories: number[],
-    shops: number[],
   ) => {
     let supabaseQuery = supabase.from("merchandises").select(`
             id, 
@@ -178,13 +177,15 @@ const SearchPage = () => {
 
   // Fetch data when query, selectedCategories, or selectedShops change
   useEffect(() => {
+    let categoryIds;
+    let shopIds;
     if (categoryParam) {
-      const categoryIds = categoryParam.split(",").map(Number);
+      categoryIds = categoryParam.split(",").map(Number);
       setSelectedCategories(categoryIds); // Set selected categories from URL param
     }
-
-    fetchMerchandises(query, selectedCategories, selectedShops);
+    fetchMerchandises(query, categoryParam ? categoryIds : selectedCategories);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [query, categoryParam, sort]); // Listen for changes in query, categoryParam, and shopParam
 
   // Handle category change

@@ -34,7 +34,7 @@ const CategoriesPage = () => {
 
   const redirectCategory = (category: Category) => {
     const queryParams = new URLSearchParams(window.location.search);
-    queryParams.set("category", category.name);
+    queryParams.set("category", category.id.toString());
     router.push(`/search?${queryParams.toString()}`);
   };
 

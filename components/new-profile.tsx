@@ -52,8 +52,8 @@ const NewProfile = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [selectedCollege, setSelectedCollege] = useState<number>(-1);
-  const [selectedProgram, setSelectedProgram] = useState<string>("");
+  const [selectedCollege, setSelectedCollege] = useState<number>(0);
+  const [selectedProgram, setSelectedProgram] = useState<string>("0");
   const [colleges, setColleges] = useState(null);
   const [programs, setPrograms] = useState(null);
   const [year, setYear] = useState<string>("");
@@ -83,18 +83,6 @@ const NewProfile = () => {
         .eq("id", user.id)
         .single();
 
-      if (profile != null) {
-        setStudNumber(profile.student_number);
-        setFname(profile.first_name);
-        setLname(profile.last_name);
-        setSelectedCollege(profile.college_id);
-        setSelectedProgram(profile.program_id);
-        setYear(profile.year);
-        setContact(profile.contact_number);
-        setSection(profile.section);
-        setProfileExist(true);
-      }
-
       let { data: colleges, error: colErrors } = await supabase
         .from("colleges")
         .select();
@@ -116,10 +104,35 @@ const NewProfile = () => {
       setColleges(colleges);
       setPrograms(programs);
 
-      console.log(programs);
-      setFilteredPrograms(
-        programs.filter((program) => program.college_id == profile.college_id),
-      );
+      if (profile == null) {
+        setSelectedCollege(colleges[0].id);
+        const filtered = programs?.filter(
+          (program) => program.college_id == colleges[0].id,
+        );
+        setFilteredPrograms(filtered);
+        setSelectedProgram(filtered[0].id);
+      }
+
+      if (profileErrors) {
+        console.error(profileErrors);
+        return;
+      }
+
+      if (profile != null) {
+        setStudNumber(profile.student_number);
+        setFname(profile.first_name);
+        setLname(profile.last_name);
+        setSelectedCollege(profile.college_id);
+        const filtered = programs?.filter(
+          (program) => program.college_id == profile.college_id,
+        );
+        setFilteredPrograms(filtered);
+        setSelectedProgram(profile.program_id);
+        setYear(profile.year);
+        setContact(profile.contact_number);
+        setSection(profile.section);
+        setProfileExist(true);
+      }
     };
     getInitialProfile();
   }, []);
@@ -137,7 +150,6 @@ const NewProfile = () => {
       console.error(authError);
       return;
     }
-    console.log(selectedProgram);
     if (profileExist) {
       const { error: databaseError } = await supabase
         .from("profiles")
@@ -192,7 +204,6 @@ const NewProfile = () => {
   };
 
   const handleProgramChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    console.log(event.target.value);
     setSelectedProgram(event.target.value);
   };
 
@@ -201,7 +212,7 @@ const NewProfile = () => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="">
       <ProfileInputComponent
         label="Student Number"
         type="text"
@@ -250,6 +261,11 @@ const NewProfile = () => {
           required
           onValueChange={(val) => {
             setSelectedCollege(Number(val));
+            const filtered = programs?.filter(
+              (program) => program.college_id == val,
+            );
+            setFilteredPrograms(filtered);
+            setSelectedProgram(filtered[0].id);
           }}
         >
           <SelectTrigger id="college">
